@@ -280,7 +280,7 @@ class MovieApp:
                 widget.destroy()
 
 if __name__ == "__main__":
-    # Create and run the MovieApp instance
+    # Create and run the MovieApp 
     root = tk.Tk()
     app = MovieApp(root)
     root.mainloop()
