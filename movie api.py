@@ -7,31 +7,39 @@ from tkinter import Listbox
 
 class MovieApp:
     def __init__(self, root):
+        # Initialize the MovieApp class
         self.root = root
         self.root.title("Movie API App")
         self.root.geometry("800x600")
         self.root.resizable(False, False)
 
+        # API key and base URL for movie data
         self.api_key = "43bac13ee6250a0184e8f77ab0024010"
         self.base_url = "https://api.themoviedb.org/3/search/movie"
 
+        # Configure root window background color
         self.root.configure(bg="#2E2E2E")
 
+        # Load background image for the welcome page
         self.home_bg_image = Image.open("Yellow Entertaiment Youtube Banner (1).png")
         self.home_bg_image = self.home_bg_image.resize((800, 600))
         self.home_bg_photo = ImageTk.PhotoImage(self.home_bg_image)
 
+        # Display the welcome page
         self.show_welcome_page()
 
+        # Configure styles for the back button
         self.back_button_style = ttk.Style()
         self.back_button_style.configure("Back.TButton", padding=6, relief="flat", font=("Arial", 14))
 
     def show_welcome_page(self):
+        # Display the welcome page with background image and menu button
         self.clear_widgets()
 
         bg_label = tk.Label(self.root, image=self.home_bg_photo)
         bg_label.place(x=0, y=0, relwidth=1, relheight=1)
 
+        # Menu button for navigation
         self.toggle_button = tk.Menubutton(self.root, text="\u2630", font=("Arial", 24), bg="#2E2E2E", fg="white")
         self.toggle_button.menu = tk.Menu(self.toggle_button, tearoff=0, font=("Arial", 14), bg="#2E2E2E", fg="white")
         self.toggle_button["menu"] = self.toggle_button.menu
@@ -41,10 +49,11 @@ class MovieApp:
         self.toggle_button.menu.add_command(label="Upcoming Movies", command=self.show_upcoming_movies)
         self.toggle_button.menu.add_command(label="Details", command=self.show_details_page)
 
-
+        # Position the menu button
         self.toggle_button.pack_forget()
         self.toggle_button.place(x=10, y=10)
 
+        # Display welcome message
         welcome_label = tk.Label(self.root, text="Welcome to Movie API App", font=("Arial", 24, "bold"), bg="sky blue", fg="yellow")
         welcome_label.place(relx=0.5, rely=0.4, anchor=tk.CENTER)
 
@@ -52,6 +61,7 @@ class MovieApp:
         created_by_label.place(relx=0.5, rely=0.9, anchor=tk.CENTER)
 
     def show_movies_page(self):
+        # Display the movies page with search bar and movie details
         self.clear_widgets()
 
         self.root.configure(bg="#334455")
@@ -73,6 +83,7 @@ class MovieApp:
         self.poster_frame.pack(side=tk.LEFT, padx=10, pady=20)
 
     def show_details_page(self):
+        # Display the details page with instructions
         self.clear_widgets()
 
         self.root.configure(bg="#334455")
@@ -101,6 +112,7 @@ class MovieApp:
         back_button.pack(pady=20)
 
     def show_popular_movies(self):
+        # Display popular movies with a listbox
         self.clear_widgets()
 
         self.root.configure(bg="#334455")
@@ -140,6 +152,7 @@ class MovieApp:
             messagebox.showerror("Error", f"Error fetching popular movies data: {e}")
 
     def show_upcoming_movies(self):
+        # Display upcoming movies with a listbox
         self.clear_widgets()
 
         self.root.configure(bg="#334455")
@@ -178,6 +191,7 @@ class MovieApp:
             messagebox.showerror("Error", f"Error fetching upcoming movies data: {e}")
 
     def search_movie(self, query):
+        # Search for a movie using the provided query
         if not query:
             messagebox.showwarning("Warning", "Please enter a search query.")
             return
@@ -203,6 +217,7 @@ class MovieApp:
             messagebox.showerror("Error", f"Error fetching movie data: {e}")
 
     def display_movie_details(self, movie_data):
+        # Display details of the selected movie
         title = movie_data.get("title", "N/A")
         overview = movie_data.get("overview", "No overview available.")
         release_date = movie_data.get("release_date", "N/A")
@@ -229,6 +244,7 @@ class MovieApp:
         scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
 
     def display_movie_poster(self, movie_data):
+        # Display the poster of the selected movie
         poster_path = movie_data.get("poster_path")
 
         if poster_path:
@@ -251,17 +267,20 @@ class MovieApp:
             messagebox.showinfo("Information", "No poster available.")
 
     def show_menu(self):
+        # Display the navigation menu
         x = self.toggle_button.winfo_rootx()
         y = self.toggle_button.winfo_rooty() + self.toggle_button.winfo_height()
 
         self.toggle_button.menu.post(x, y)
 
     def clear_widgets(self):
+        # Clear all widgets from the root window except the menu button
         for widget in self.root.winfo_children():
             if widget != self.toggle_button:
                 widget.destroy()
 
 if __name__ == "__main__":
+    # Create and run the MovieApp instance
     root = tk.Tk()
     app = MovieApp(root)
     root.mainloop()
