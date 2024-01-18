@@ -5,15 +5,21 @@ from PIL import Image, ImageTk
 import io
 from tkinter import Listbox
 
-class MovieApp:
-    def __init__(self, root):
-        # Initialize the MovieApp class
-        self.root = root
-        self.root.title("Movie API App")
-        self.root.geometry("800x600")
-        self.root.resizable(False, False)
+class MoviesApp:
+    def clear_widgets(self):
+        # Clear all widgets from the root window except the menu button
+        for widget in self.root.winfo_children():
+            if widget != self.menu_button:
+                widget.destroy()
 
-        # API key and base URL for movie data
+    def __init__(self, root):
+        self.root = root
+        self.root.title("Movies Application") # Title of the API
+        self.root.geometry("800x600")# Set the  size of the Tkinter window size to 800x600 
+        self.root.resizable(False, False)# Make the Tkinter window non-resizable in both width and height
+
+
+        # url of api key and MovieDatabase
         self.api_key = "43bac13ee6250a0184e8f77ab0024010"
         self.base_url = "https://api.themoviedb.org/3/search/movie"
 
@@ -21,9 +27,9 @@ class MovieApp:
         self.root.configure(bg="#2E2E2E")
 
         # Load background image for the welcome page
-        self.home_bg_image = Image.open("Yellow Entertaiment Youtube Banner (1).png")
-        self.home_bg_image = self.home_bg_image.resize((800, 600))
-        self.home_bg_photo = ImageTk.PhotoImage(self.home_bg_image)
+        self.mainpage_bg_image = Image.open("Yellow Entertaiment Youtube Banner (1).png")
+        self.mainpage_bg_image = self.mainpage_bg_image.resize((800, 600))
+        self.mainpage_bg_photo = ImageTk.PhotoImage(self.mainpage_bg_image)
 
         # Display the welcome page
         self.show_welcome_page()
@@ -36,29 +42,29 @@ class MovieApp:
         # Display the welcome page with background image and menu button
         self.clear_widgets()
 
-        bg_label = tk.Label(self.root, image=self.home_bg_photo)
+        bg_label = tk.Label(self.root, image=self.mainpage_bg_photo)  
         bg_label.place(x=0, y=0, relwidth=1, relheight=1)
 
         # Menu button for navigation
-        self.toggle_button = tk.Menubutton(self.root, text="\u2630", font=("Arial", 24), bg="#2E2E2E", fg="white")
-        self.toggle_button.menu = tk.Menu(self.toggle_button, tearoff=0, font=("Arial", 14), bg="#2E2E2E", fg="white")
-        self.toggle_button["menu"] = self.toggle_button.menu
-        self.toggle_button.menu.add_command(label="Home", command=self.show_welcome_page)
-        self.toggle_button.menu.add_command(label="Movies", command=self.show_movies_page)
-        self.toggle_button.menu.add_command(label="Popular Movies", command=self.show_popular_movies)
-        self.toggle_button.menu.add_command(label="Upcoming Movies", command=self.show_upcoming_movies)
-        self.toggle_button.menu.add_command(label="Details", command=self.show_details_page)
+        self.menu_button = tk.Menubutton(self.root, text="\u2630", font=("Arial", 24), bg="#2E2E2E", fg="white")
+        self.menu_button.menu = tk.Menu(self.menu_button, tearoff=0, font=("Arial", 14), bg="#2E2E2E", fg="white")
+        self.menu_button["menu"] = self.menu_button.menu
+        self.menu_button.menu.add_command(label="Home", command=self.show_welcome_page)
+        self.menu_button.menu.add_command(label="Movies", command=self.show_movies_page)
+        self.menu_button.menu.add_command(label="Popular Movies", command=self.show_popular_movies)
+        self.menu_button.menu.add_command(label="Upcoming Movies", command=self.show_upcoming_movies)
+        self.menu_button.menu.add_command(label="Details", command=self.show_details_page)
 
         # Position the menu button
-        self.toggle_button.pack_forget()
-        self.toggle_button.place(x=10, y=10)
+        self.menu_button.pack_forget()
+        self.menu_button.place(x=10, y=10)
 
-        # Display welcome message
-        welcome_label = tk.Label(self.root, text="Welcome to Movie API App", font=("Arial", 24, "bold"), bg="sky blue", fg="yellow")
-        welcome_label.place(relx=0.5, rely=0.4, anchor=tk.CENTER)
+        # Display greeting message 
+        greeting_message = tk.Label(self.root, text="Welcome to Movie API App", font=("Arial", 24, "bold"), bg="sky blue", fg="yellow")
+        greeting_message.place(relx=0.5, rely=0.4, anchor=tk.CENTER)
 
-        created_by_label = tk.Label(self.root, text="Created by Aqsa Riaz", font=("Arial", 19, "italic"), bg="sky blue", fg="yellow")
-        created_by_label.place(relx=0.5, rely=0.9, anchor=tk.CENTER)
+        created_by = tk.Label(self.root, text="Created by Aqsa Riaz", font=("Arial", 19, "italic"), bg="sky blue", fg="yellow")
+        created_by.place(relx=0.5, rely=0.9, anchor=tk.CENTER)
 
     def show_movies_page(self):
         # Display the movies page with search bar and movie details
@@ -75,12 +81,12 @@ class MovieApp:
                                    style="TButton", cursor="hand2")
         search_button.pack(pady=10)
 
-        self.details_frame = tk.Frame(self.root, bg="#007ACC", bd=4, relief=tk.SOLID, width=400, height=300)
-        self.details_frame.pack(side=tk.LEFT, padx=10, pady=20)
-        self.details_frame.pack_propagate(0)
+        self.info_frame = tk.Frame(self.root, bg="#007ACC", bd=4, relief=tk.SOLID, width=400, height=300)
+        self.info_frame.pack(side=tk.LEFT, padx=10, pady=20)
+        self.info_frame.pack_propagate(0)
 
-        self.poster_frame = tk.Frame(self.root, bg="#334455")
-        self.poster_frame.pack(side=tk.LEFT, padx=10, pady=20)
+        self.image_frame = tk.Frame(self.root, bg="#334455")
+        self.image_frame.pack(side=tk.LEFT, padx=10, pady=20)
 
     def show_details_page(self):
         # Display the details page with instructions
@@ -88,7 +94,7 @@ class MovieApp:
 
         self.root.configure(bg="#334455")
 
-        details_label = tk.Label(self.root, text="How to Use the App", font=("Arial", 25,"bold"), bg="#334455", fg="sky blue")
+        details_label = tk.Label(self.root, text="How to Use the App", font=("Arial", 25, "bold"), bg="#334455", fg="sky blue")
         details_label.pack(pady=20)
 
         instructions_label = tk.Label(self.root, text="Instructions:", font=("Arial", 25, "bold"), bg="#334455", fg="yellow")
@@ -112,7 +118,7 @@ class MovieApp:
         back_button.pack(pady=20)
 
     def show_popular_movies(self):
-        # Display popular movies with a listbox
+        # Display popular movies in a frame
         self.clear_widgets()
 
         self.root.configure(bg="#334455")
@@ -123,8 +129,8 @@ class MovieApp:
         popular_movies_frame = tk.Frame(self.root, bg="#334455")
         popular_movies_frame.pack(pady=20)
 
-        back_to_menu_button = ttk.Button(self.root, text="Back to Menu", command=self.show_menu, style="Back.TButton")
-        back_to_menu_button.pack(pady=10)
+        back_button = ttk.Button(self.root, text="Back", command=self.show_menu, style="Back.TButton")
+        back_button.pack(pady=10)
 
         popular_movies_url = "https://api.themoviedb.org/3/movie/popular"
         params = {
@@ -136,17 +142,17 @@ class MovieApp:
             response.raise_for_status()
             popular_movies_data = response.json()
 
-            listbox = Listbox(popular_movies_frame, selectbackground="sky blue", font=("Arial", 14), bg="#334455", fg="white", width=40, height=10)
+            moviesbox = Listbox(popular_movies_frame, selectbackground="sky blue", font=("Arial", 14), bg="#334455", fg="white", width=40, height=10)
             for movie in popular_movies_data.get("results", []):
-                listbox.insert(tk.END, movie.get("title", "N/A"))
+                moviesbox.insert(tk.END, movie.get("title", "N/A"))
 
-            listbox.pack(side=tk.LEFT, padx=20, pady=10, fill=tk.BOTH, expand=True)
+            moviesbox.pack(side=tk.LEFT, padx=20, pady=10, fill=tk.BOTH, expand=True)
 
             scrollbar = tk.Scrollbar(popular_movies_frame, orient=tk.VERTICAL)
-            scrollbar.config(command=listbox.yview)
+            scrollbar.config(command=moviesbox.yview)
             scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
 
-            listbox.config(yscrollcommand=scrollbar.set)
+            moviesbox.config(yscrollcommand=scrollbar.set)
 
         except requests.exceptions.RequestException as e:
             messagebox.showerror("Error", f"Error fetching popular movies data: {e}")
@@ -162,8 +168,8 @@ class MovieApp:
         upcoming_movies_frame = tk.Frame(self.root, bg="#334455")
         upcoming_movies_frame.pack(pady=20)
 
-        back_to_menu_button = ttk.Button(self.root, text="Back to Menu", command=self.show_menu, style="Back.TButton")
-        back_to_menu_button.pack(pady=10)
+        back_button = ttk.Button(self.root, text="Back", command=self.show_menu, style="Back.TButton")
+        back_button.pack(pady=10)
 
         upcoming_movies_url = "https://api.themoviedb.org/3/movie/upcoming"
         params = {
@@ -175,17 +181,17 @@ class MovieApp:
             response.raise_for_status()
             upcoming_movies_data = response.json()
 
-            listbox = Listbox(upcoming_movies_frame, selectbackground="sky blue", font=("Arial", 14), bg="#334455", fg="white", width=40, height=10)
+            moviesbox = Listbox(upcoming_movies_frame, selectbackground="sky blue", font=("Arial", 14), bg="#334455", fg="white", width=40, height=10)
             for movie in upcoming_movies_data.get("results", []):
-                listbox.insert(tk.END, movie.get("title", "N/A"))
+                moviesbox.insert(tk.END, movie.get("title", "N/A"))
 
-            listbox.pack(side=tk.LEFT, padx=20, pady=10, fill=tk.BOTH, expand=True)
+            moviesbox.pack(side=tk.LEFT, padx=20, pady=10, fill=tk.BOTH, expand=True)
 
             scrollbar = tk.Scrollbar(upcoming_movies_frame, orient=tk.VERTICAL)
-            scrollbar.config(command=listbox.yview)
+            scrollbar.config(command=moviesbox.yview)
             scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
 
-            listbox.config(yscrollcommand=scrollbar.set)
+            moviesbox.config(yscrollcommand=scrollbar.set)
 
         except requests.exceptions.RequestException as e:
             messagebox.showerror("Error", f"Error fetching upcoming movies data: {e}")
@@ -196,13 +202,13 @@ class MovieApp:
             messagebox.showwarning("Warning", "Please enter a search query.")
             return
 
-        params = {
+        request_parameters = {
             "api_key": self.api_key,
             "query": query
         }
 
         try:
-            response = requests.get(self.base_url, params=params)
+            response = requests.get(self.base_url, params=request_parameters)
             response.raise_for_status()
             movie_data = response.json()
             if movie_data.get("results"):
@@ -218,23 +224,23 @@ class MovieApp:
 
     def display_movie_details(self, movie_data):
         # Display details of the selected movie
-        title = movie_data.get("title", "N/A")
-        overview = movie_data.get("overview", "No overview available.")
+        movie_title = movie_data.get("title", "N/A")
+        movie_overview = movie_data.get("overview", "No overview available.")
         release_date = movie_data.get("release_date", "N/A")
-        language = movie_data.get("original_language", "N/A")
-        rating = movie_data.get("vote_average", "N/A")
+        original_language = movie_data.get("original_language", "N/A")
+        vote_average = movie_data.get("vote_average", "N/A")
         movie_id = movie_data.get("id", "N/A")
 
-        for widget in self.details_frame.winfo_children():
+        for widget in self.info_frame.winfo_children():
             widget.destroy()
 
-        details_text = f"Title: {title}\nRelease Date: {release_date}\n"
-        details_text += f"Language: {language}\nRating: {rating}\nMovie ID: {movie_id}\n"
-        details_text += f"\nOverview: {overview}"
+        details_text = f"Title: {movie_title}\nRelease Date: {release_date}\n"
+        details_text += f"Language: {original_language}\nRating: {vote_average}\nMovie ID: {movie_id}\n"
+        details_text += f"\nOverview: {movie_overview}"
 
-        details_text_widget = tk.Text(self.details_frame, wrap=tk.WORD, width=50, height=15,
+        details_text_widget = tk.Text(self.info_frame, wrap=tk.WORD, width=50, height=15,
                                       font=("Arial", 12), bg="#007ACC", fg="white")
-        scrollbar = ttk.Scrollbar(self.details_frame, command=details_text_widget.yview)
+        scrollbar = ttk.Scrollbar(self.info_frame, command=details_text_widget.yview)
         details_text_widget.config(yscrollcommand=scrollbar.set)
 
         details_text_widget.insert(tk.END, details_text)
@@ -256,10 +262,10 @@ class MovieApp:
 
             photo_image = ImageTk.PhotoImage(poster_image)
 
-            for widget in self.poster_frame.winfo_children():
+            for widget in self.image_frame.winfo_children():
                 widget.destroy()
 
-            poster_label = tk.Label(self.poster_frame, image=photo_image, text="", compound=tk.TOP, bg="#334455", bd=5, relief=tk.RAISED,
+            poster_label = tk.Label(self.image_frame, image=photo_image, text="", compound=tk.TOP, bg="#334455", bd=5, relief=tk.RAISED,
                                     highlightbackground="white", highlightcolor="white")
             poster_label.image = photo_image
             poster_label.pack(pady=10)
@@ -268,19 +274,13 @@ class MovieApp:
 
     def show_menu(self):
         # Display the navigation menu
-        x = self.toggle_button.winfo_rootx()
-        y = self.toggle_button.winfo_rooty() + self.toggle_button.winfo_height()
+        x = self.menu_button.winfo_rootx()
+        y = self.menu_button.winfo_rooty() + self.menu_button.winfo_height()
 
-        self.toggle_button.menu.post(x, y)
-
-    def clear_widgets(self):
-        # Clear all widgets from the root window except the menu button
-        for widget in self.root.winfo_children():
-            if widget != self.toggle_button:
-                widget.destroy()
+        self.menu_button.menu.post(x, y)
 
 if __name__ == "__main__":
     # Create and run the MovieApp 
     root = tk.Tk()
-    app = MovieApp(root)
+    app = MoviesApp(root)
     root.mainloop()
